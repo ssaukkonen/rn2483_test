@@ -10,6 +10,7 @@ print(ser.name)         # check which port was really used
 
 #Initial the dht device, with data pin connected to:
 dhtDevice = adafruit_dht.DHT11(board.D17, False)
+global temp
 
 komennot = [
     'sys get ver',
@@ -17,10 +18,6 @@ komennot = [
     'mac pause',
     'radio set pwr 14'
 ]
-
-temperature_c = dhtDevice.temperature
-print(temperature_c)
-temp = str(temperature_c)
 
 for m in komennot:
         ser.write(m.encode())
@@ -31,13 +28,30 @@ for m in komennot:
         else:
             print('\t<< no response')
             
-msg = temp.encode("utf-8").hex()
-#msg = binascii.hexlify(temperature_c)        
-print(msg)
-send = 'radio tx '
-ser.write(send.encode('utf_8')+msg.encode('utf_8')+'\r\n'.encode('utf_8'))     # write a string
-sleep(.2)
-response = ser.readline().decode()
-print(response)
-ser.close()             # close port
-exit()
+def sendRadio():
+    global temp
+    print(temp+' radio')
+    msg = temp.encode("utf-8").hex()       
+    print(msg)
+    send = 'radio tx '
+    ser.write(send.encode('utf_8')+msg.encode('utf_8')+'\r\n'.encode('utf_8'))     # write a string
+    sleep(.2)
+    response = ser.readline().decode()
+    print(response)
+    sleep(2)
+    getValues()
+
+def getValues():
+    while True:
+        try:
+            global temp
+            temperature_c = dhtDevice.temperature
+            print(temperature_c)
+            temp = str(temperature_c)
+            print(temp+' values')
+            sendRadio()
+        except RuntimeError as error:     # Errors happen fairly often, DHT's are hard to read, just keep going
+            print(error.args[0])
+        sleep(2.0)            
+
+getValues()
