@@ -11,8 +11,7 @@ komennot = [
     'sys get ver',
     'sys get hweui',
     'radio set wdt 0',
-    'mac pause',
-    'radio rx 0'
+    'mac pause'
 ]
 for m in komennot:
         ser.write(m.encode())
@@ -22,11 +21,21 @@ for m in komennot:
             print('\t<<{r}'.format(r=r[:-2]))
         else:
             print('\t<< no response')
-response = ser.readline().decode()
-#print(response)
-msg2 = response[10:][:-2]
-#print(msg2)
-msg = binascii.unhexlify(msg2.encode()).decode()
-print(msg)
-ser.close()
-exit()
+def receive():
+    i=1
+    while i==1:
+        #print('start')
+        sleep(.2)
+        ser.write('radio rx 0'.encode())
+        ser.write(b'\r\n')
+        #if ser.readable():                
+        response = ser.readline().decode()
+        if response.startswith('radio_rx'):
+            #print(response)
+            msg2 = response[10:][:-2]
+            #print(msg2)
+            msg = binascii.unhexlify(msg2.encode()).decode()
+            print(msg)                
+    else:
+        print('loppu')
+receive()            
