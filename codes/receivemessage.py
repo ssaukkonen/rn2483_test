@@ -10,6 +10,7 @@ print(ser.name)         # check which port was really used
 komennot = [
     'sys get ver',
     'sys get hweui',
+    'radio set wdt 0',
     'mac pause',
     'radio rx 0'
 ]
