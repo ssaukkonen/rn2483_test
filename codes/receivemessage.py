@@ -61,6 +61,37 @@ def receive():
 def writeToFile():
     global temp, humi, date
     data = open('../data.txt', 'a')
-    data.write('{};{};{}\n'.format(temp, humi, date))    
+    data.write('{};{};{}\n'.format(temp, humi, date))
+    printData()
+    
+def printData():
+    with open('../data.txt') as data:
+        sumTemp = 0 # initialize here, outside the loop
+        sumHumi = 0
+        maxT = 0
+        minT = 1000
+        maxH = 0
+        minH = 100
+        count = 0 # and a line counter
+        for line in data:
+            count += 1 # increment the counter
+            data2 = line.split(';')
+            #print(data2[0])
+            sumTemp += float(data2[0]) # add here, not in a nested loop
+            sumHumi += float(data2[1])
+            if int(maxT) < int(data2[0]):
+                maxT = (data2[0])
+            if int(minT) > int(data2[0]):
+                minT = (data2[0])
+            if int(maxH) < int(data2[1]):
+                maxH = (data2[1])
+            if int(minH) > int(data2[1]):
+                minH = (data2[1])      
+        averageT = sumTemp / count
+        averageH = sumHumi / count
+        
+
+        print(averageT, averageH, maxT, minT, maxH, minH)
+    #print(lampo)
     
 receive()
