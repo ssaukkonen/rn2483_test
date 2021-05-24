@@ -7,6 +7,8 @@ import codecs
 ser = serial.Serial('/dev/ttyS0', 57600)  # open serial port
 print(ser.name)         # check which port was really used
 
+code = str(1234)
+
 komennot = [
     'sys get ver',
     'sys get hweui',
@@ -31,11 +33,21 @@ def receive():
         #if ser.readable():                
         response = ser.readline().decode()
         if response.startswith('radio_rx'):
-            #print(response)
+            print(response)
             msg2 = response[10:][:-2]
-            #print(msg2)
-            msg = binascii.unhexlify(msg2.encode()).decode()
-            print(msg)                
+            msg3 = len(msg2)
+            print(msg2)
+            print(msg3)
+            if (((msg3 % 2) == 0) and (msg3 == 60)):
+                msg = binascii.unhexlify(msg2.encode()).decode()
+                codeS, temp, humi, date = msg.split(';')               
+                if code == codeS:
+                    #print(msg)
+                    print(temp, humi, date)
+                else:
+                        print('wrong code')
+            else:
+                print('odd length string')
     else:
         print('loppu')
 receive()            
