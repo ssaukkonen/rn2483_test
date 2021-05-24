@@ -3,11 +3,15 @@ from time import sleep
 import io
 import binascii
 import codecs
+import textwrap
 
 ser = serial.Serial('/dev/ttyS0', 57600)  # open serial port
 print(ser.name)         # check which port was really used
 
 code = str(1234)
+global temp
+global humi
+global date
 
 komennot = [
     'sys get ver',
@@ -23,8 +27,10 @@ for m in komennot:
             print('\t<<{r}'.format(r=r[:-2]))
         else:
             print('\t<< no response')
+            
 def receive():
     i=1
+    global temp, humi, date
     while i==1:
         #print('start')
         sleep(.2)
@@ -44,10 +50,17 @@ def receive():
                 if code == codeS:
                     #print(msg)
                     print(temp, humi, date)
+                    writeToFile()
                 else:
                         print('wrong code')
             else:
                 print('odd length string')
     else:
         print('loppu')
-receive()            
+        
+def writeToFile():
+    global temp, humi, date
+    data = open('../data.txt', 'a')
+    data.write('{};{};{}\n'.format(temp, humi, date))    
+    
+receive()
