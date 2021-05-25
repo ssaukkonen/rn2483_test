@@ -44,7 +44,7 @@ def receive():
             msg3 = len(msg2)
             print(msg2)
             print(msg3)
-            if (((msg3 % 2) == 0) and (msg3 == 60)):
+            if (((not msg2.endswith('o'))) and (msg3 == 60)) and not msg2.endswith('k'):
                 msg = binascii.unhexlify(msg2.encode()).decode()
                 codeS, temp, humi, date = msg.split(';')               
                 if code == codeS:
