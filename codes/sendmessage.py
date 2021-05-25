@@ -47,7 +47,7 @@ def sendRadio():
     response = ser.readline().decode()
     print(response)
     sleep(2)
-    getValues()
+    #getValues()
 
 def getValues():
     while True:
