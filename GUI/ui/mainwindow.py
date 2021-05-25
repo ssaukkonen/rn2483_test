@@ -9,7 +9,6 @@ from PyQt5.QtWidgets import QMainWindow
 
 from .Ui_mainwindow import Ui_MainWindow
 
-
 class MainWindow(QMainWindow, Ui_MainWindow):
     """
     Class documentation goes here.
@@ -24,10 +23,15 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         super(MainWindow, self).__init__(parent)
         self.setupUi(self)
     
+    def update_label(self):
+        print('update_label')
+        self.maxTemp.setText('hello')
+
     @pyqtSlot()
     def on_pushButton_clicked(self):
         """
         Slot documentation goes here.
         """
         # TODO: not implemented yet
-        self.close()
+        #self.close()
+        MainWindow.update_label(self)
