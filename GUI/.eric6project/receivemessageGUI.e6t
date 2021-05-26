@@ -1,16 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE Tasks SYSTEM "Tasks-6.0.dtd">
 <!-- eric6 tasks file for project receivemessageGUI -->
-<!-- Saved: 2021-05-25, 15:06:02 -->
+<!-- Saved: 2021-05-26, 14:57:49 -->
 <Tasks version="6.0">
   <ProjectScanFilter></ProjectScanFilter>
-  <Task priority="1" completed="False" type="1" uid="{9584b814-f804-489f-ba59-9f8cd7c09bff}">
+  <Task priority="1" completed="False" type="1" uid="{647febda-4ec7-4b9e-b244-4c9ca9b0b243}">
     <Summary>TODO: not implemented yet</Summary>
     <Description></Description>
-    <Created>2021-05-25, 15:03:30</Created>
+    <Created>2021-05-26, 14:40:12</Created>
     <Resource>
       <Filename>ui/mainwindow.py</Filename>
-      <Linenumber>35</Linenumber>
+      <Linenumber>41</Linenumber>
     </Resource>
   </Task>
 </Tasks>

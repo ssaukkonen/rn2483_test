@@ -22,10 +22,16 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         """
         super(MainWindow, self).__init__(parent)
         self.setupUi(self)
+        #print('mainwindow loppu')
+        self.test()
     
     def update_label(self):
         print('update_label')
         self.maxTemp.setText('hello')
+        self.maxHum.setText('hello2')
+
+    def testi(self):
+        self.update_label()
 
     @pyqtSlot()
     def on_pushButton_clicked(self):
@@ -34,4 +40,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         """
         # TODO: not implemented yet
         #self.close()
-        MainWindow.update_label(self)
+        self.update_label()
+        
+    def test(self):
+        self.update_label()
