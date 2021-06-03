@@ -27,7 +27,9 @@ ser = serial.Serial('/dev/ttyS0', 57600)  # open serial port
 print(ser.name)         # check which port was really used
 
 class WorkerSignals(QObject):
-    signaali = pyqtSignal()
+    #signaali = pyqtSignal()
+    current = pyqtSignal(str, str)
+    calcData = pyqtSignal(str, str, str, str, str, str)
 
 class Worker(QRunnable):
     '''
@@ -37,6 +39,7 @@ class Worker(QRunnable):
         super(Worker, self).__init__()
         self.signals = WorkerSignals()
         
+        global code
         code = str(1234)
         global temp
         global humi
@@ -103,7 +106,10 @@ class Worker(QRunnable):
         global temp, humi, date
         data = open('../data.txt', 'a')
         data.write('{};{};{}\n'.format(temp, humi, date))
+        data.close()
+        self.signals.current.emit(temp, humi)
         self.printData()
+        
 
     def printData(self):
         with open('../data.txt') as data:
@@ -128,11 +134,14 @@ class Worker(QRunnable):
                     maxH = (data2[1])
                 if int(minH) > int(data2[1]):
                     minH = (data2[1])      
-            averageT = sumTemp / count
-            averageH = sumHumi / count
+            averageT = round(sumTemp / count, 2)
+            averageH = round(sumHumi / count, 2)
             
-
+            
             print(averageT, averageH, maxT, minT, maxH, minH)
+            self.signals.calcData.emit(str(averageT), str(averageH), maxT, minT, maxH, minH)
+            
+            
 
 class MainWindow(QMainWindow, Ui_MainWindow):
     """
@@ -163,7 +172,8 @@ class MainWindow(QMainWindow, Ui_MainWindow):
 
     def testi(self):
         worker = Worker()
-        worker.signals.signaali.connect(self.test)
+        worker.signals.current.connect(self.updateCurrent)
+        worker.signals.calcData.connect(self.updateData)
         self.threadpool.start(worker)
         #self.update_label()
 
@@ -173,12 +183,26 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         Slot documentation goes here.
         """
         # TODO: not implemented yet
-        #self.close()
-        self.update_label()
+        self.close()
+        #self.update_label()
 
     @pyqtSlot()    
     def test(self):
         self.minTemp.setText('thread')
+        
+    @pyqtSlot(str, str)    
+    def updateCurrent(self, temp2, humi2):
+        self.curTemp.setText(temp2)
+        self.curHum.setText(humi2)
+
+    @pyqtSlot(str, str, str, str, str, str)    
+    def updateData(self, averageT2, averageH2, maxT2, minT2, maxH2, minH2):
+        self.avgTemp.setText(averageT2)
+        self.avgHum.setText(averageH2)
+        self.maxTemp.setText(maxT2)
+        self.minTemp.setText(minT2)
+        self.maxHum.setText(maxH2)
+        self.minHum.setText(minH2)
         
 if __name__=="__main__":
     import sys
