@@ -1,9 +1,7 @@
 import serial
 from time import sleep
-import io
 import board
 import adafruit_dht
-import binascii
 from datetime import datetime
 
 ser = serial.Serial('/dev/ttyS0', 57600)  # open serial port
@@ -35,10 +33,9 @@ def sendRadio():
     global temp
     global humi
     global code
-    print(code)
-    #print(temp+' radio')
+    #print(code)
     now = datetime.now().strftime("%Y/%m/%d %H:%M:%S")
-    print(now)
+    #print(now)
     msg = code.encode("utf-8").hex()+';'.encode("utf-8").hex()+temp.encode("utf-8").hex()+';'.encode("utf-8").hex()+humi.encode("utf-8").hex()+';'.encode("utf-8").hex()+now.encode("utf-8").hex()  
     print(msg)
     send = 'radio tx '
@@ -47,7 +44,6 @@ def sendRadio():
     response = ser.readline().decode()
     print(response)
     sleep(2)
-    #getValues()
 
 def getValues():
     while True:
@@ -56,11 +52,10 @@ def getValues():
             global humi
             temperature_c = dhtDevice.temperature
             humidity = dhtDevice.humidity
-            print(temperature_c)
-            print(humidity)
+            #print(temperature_c)
+            #print(humidity)
             temp = str(temperature_c)
             humi = str(humidity)
-            #print(temp+' values')
             sendRadio()
         except RuntimeError as error:     # Errors happen fairly often, DHT's are hard to read, just keep going
             print(error.args[0])
