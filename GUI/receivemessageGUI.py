@@ -4,30 +4,20 @@
 Module implementing MainWindow.
 """
 
-#from PyQt5.QtCore import pyqtSlot
-#from PyQt5.QtCore import Qt
-#from PyQt5.QtWidgets import QMainWindow
-
 from PyQt5.QtGui import *
 from PyQt5.QtWidgets import *
 from PyQt5.QtCore import *
 from time import sleep
 
 import serial
-#import io
 import binascii
-#import codecs
-#import textwrap
-
 
 from ui.Ui_mainwindow import Ui_MainWindow
-#import receivemessageengine
 
 ser = serial.Serial('/dev/ttyS0', 57600)  # open serial port
 print(ser.name)         # check which port was really used
 
 class WorkerSignals(QObject):
-    #signaali = pyqtSignal()
     current = pyqtSignal(str, str)
     calcData = pyqtSignal(str, str, str, str, str, str)
 
@@ -60,39 +50,31 @@ class Worker(QRunnable):
                 else:
                     print('\t<< no response')
 
-    #@pyqtSlot()
     def run(self):
         '''
         Your code goes in this function
         '''
         print("Thread start")
-        #receivemessageengine().label_update()
-        #sleep(5)
-        #self.signals.signaali.emit()
-        #self.maxTemp.setText('thread')
         self.receive()
         
     def receive(self):
         i=1
         global temp, humi, date
         while i==1:
-            #print('start')
             sleep(.2)
             ser.write('radio rx 0'.encode())
-            ser.write(b'\r\n')
-            #if ser.readable():                
+            ser.write(b'\r\n')               
             response = ser.readline().decode()
             if response.startswith('radio_rx'):
-                print(response)
+                #print(response)
                 msg2 = response[10:][:-2]
                 msg3 = len(msg2)
-                print(msg2)
-                print(msg3)
+                #print(msg2)
+                #print(msg3)
                 if (((not msg2.endswith('o'))) and (msg3 == 60)) and not msg2.endswith('k'):
                     msg = binascii.unhexlify(msg2.encode()).decode()
                     codeS, temp, humi, date = msg.split(';')               
                     if code == codeS:
-                        #print(msg)
                         print(temp, humi, date)
                         self.writeToFile()
                     else:
@@ -123,7 +105,6 @@ class Worker(QRunnable):
             for line in data:
                 count += 1 # increment the counter
                 data2 = line.split(';')
-                #print(data2[0])
                 sumTemp += float(data2[0]) # add here, not in a nested loop
                 sumHumi += float(data2[1])
                 if int(maxT) < int(data2[0]):
@@ -139,8 +120,7 @@ class Worker(QRunnable):
             
             
             print(averageT, averageH, maxT, minT, maxH, minH)
-            self.signals.calcData.emit(str(averageT), str(averageH), maxT, minT, maxH, minH)
-            
+            self.signals.calcData.emit(str(averageT), str(averageH), maxT, minT, maxH, minH)            
             
 
 class MainWindow(QMainWindow, Ui_MainWindow):
@@ -156,12 +136,8 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         """
         super(MainWindow, self).__init__()
         self.setupUi(self)
-        #print('mainwindow loppu')
-        #self.test()
         self.threadpool = QThreadPool()
         print("Multithreading with maximum %d threads" % self.threadpool.maxThreadCount())
-        #worker = Worker()
-        #self.threadpool.start(worker)
         self.testi()
         
     @pyqtSlot()
@@ -175,16 +151,13 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         worker.signals.current.connect(self.updateCurrent)
         worker.signals.calcData.connect(self.updateData)
         self.threadpool.start(worker)
-        #self.update_label()
 
     @pyqtSlot()
     def on_pushButton_clicked(self):
         """
         Slot documentation goes here.
         """
-        # TODO: not implemented yet
         self.close()
-        #self.update_label()
 
     @pyqtSlot()    
     def test(self):
@@ -209,5 +182,4 @@ if __name__=="__main__":
     app = QApplication([])
     ui  = MainWindow()
     ui.show()
-    #receivemessageengine.label_update()
     sys.exit(app.exec_())      
