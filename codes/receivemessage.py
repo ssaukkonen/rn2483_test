@@ -62,6 +62,7 @@ def writeToFile():
     global temp, humi, date
     data = open('../data.txt', 'a')
     data.write('{};{};{}\n'.format(temp, humi, date))
+    data.close()
     printData()
     
 def printData():
