@@ -2,7 +2,7 @@ import psycopg2
 from psycopg2 import Error
 import textwrap
 
-def database(self, temp, humi, date):
+def database(temp, humi, date):
     try:
         cred2 = open('cred','r')
         cred = cred2.readline()
